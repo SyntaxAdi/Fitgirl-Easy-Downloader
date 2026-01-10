@@ -64,6 +64,7 @@ links = [
     if a["href"].startswith("https://fuckingfast.co/")
 ]
 
+
 if not links:
     log.error("No Matching URLs Found", "Retry..")
 else:
@@ -73,4 +74,5 @@ else:
     print(output)
 
     pyperclip.copy(output)
+    
     log.success("All Links Copied To Clipboard", len(links))
