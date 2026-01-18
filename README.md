@@ -25,7 +25,7 @@ pip install requests beautifulsoup4 tqdm colorama
    - Extract and download files to the `downloads` folder.
    - Remove processed links from `input.txt`.
 
-## Extra
+## Get Direct Download Links
 
 To extract and copy all direct download links automatically, follow these steps:
 
