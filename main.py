@@ -70,7 +70,7 @@ def download_file(download_url, output_path):
 
         log.success(f"Successfully Downloaded File", F"{output_path[:35]}...{output_path[55:]}")
     else:
-        log.error(f"Failed To Fownload File", response.status_code)
+        log.error(f"Failed To Download File", response.status_code)
 
 def remove_link(processed_link, input_file='input.txt'):
     with open(input_file, 'r') as file:
@@ -117,3 +117,4 @@ for link in links:
             log.error("No Download Url Found", response.status_code)
     else:
         log.error("Download Function Not Found", response.status_code)
+
