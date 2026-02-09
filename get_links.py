@@ -34,45 +34,42 @@ class console:
     def input(self, message):
         return input(f"{self.colors['lightblack']}{self.timestamp()} » {self.colors['lightcyan']}INPUT   {self.colors['lightblack']}• {self.colors['white']}{message}{self.colors['reset']}")
 
+
+from fake_useragent import UserAgent
+
 log = console()
 log.clear()
-r = requests.get(log.input("Enter Fitgirl Game Link : "))
+
+ua = UserAgent()
+headers = {
+    'user-agent': ua.random,
+}
+
+r = requests.get(log.input("Enter Fitgirl Game Link : "), headers=headers)
 
 soup = BeautifulSoup(r.text, "html.parser")
 
-text_span = soup.find(
-    "span",
-    string=lambda s: s and "REALLY Fucking Fast" in s
-)
+links = []
+spoilers = soup.find_all("div", class_="su-spoiler")
 
-if not text_span:
-    log.error("Text Not Found", "REALLY Fucking Fast")
-    sys.exit()
+for spoiler in spoilers:
+    found_links = [
+        a["href"]
+        for a in spoiler.find_all("a", href=True)
+        if a["href"].startswith("https://fuckingfast.co/")
+    ]
+    links.extend(found_links)
 
-spoiler = text_span.find_next(
-    "div",
-    class_="su-spoiler"
-)
+# Remove duplicates while preserving order
+seen = set()
+links = [x for x in links if not (x in seen or seen.add(x))]
 
-if not spoiler:
-    log.error("Spoiler Container Not Found", "su-spoiler")
-    sys.exit()
-
-links = [
-    a["href"]
-    for a in spoiler.find_all("a", href=True)
-    if a["href"].startswith("https://fuckingfast.co/")
-]
 
 
 if not links:
     log.error("No Matching URLs Found", "Retry..")
 else:
-    output = "\n".join(links)
-
-    print("🔗 Matching URLs :")
-    print(output)
-
-    pyperclip.copy(output)
+    with open("input.txt", "w") as f:
+        f.write("\n".join(links))
     
-    log.success("All Links Copied To Clipboard", len(links))
+    log.success("All Links Saved To input.txt", len(links))
